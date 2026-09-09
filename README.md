@@ -1,80 +1,65 @@
-<div align="center">
-  <img src="banner.png" width="100%" alt="Fernando Marques da Cruz, front-end developer, Rio Claro, SP, fernandomcruz.com.br">
-</div>
+<img src="header.svg" width="100%" alt="Fernando Marques da Cruz — front-end developer — Rio Claro, SP — fernandomcruz.com.br">
 
-<p align="center">
-  <a href="https://fernandomcruz.com.br">
-    <img src="https://img.shields.io/badge/portf%C3%B3lio-0E0F0E?style=flat-square&logo=googlechrome&logoColor=D9FF00" alt="Portfólio">
-  </a>
-  <a href="https://www.linkedin.com/in/fernando-marques-da-cruz-105029346/">
-    <img src="https://img.shields.io/badge/linkedin-0E0F0E?style=flat-square&logo=linkedin&logoColor=D9FF00" alt="LinkedIn">
-  </a>
-  <a href="mailto:fernandomarquecruz@gmail.com">
-    <img src="https://img.shields.io/badge/e--mail-0E0F0E?style=flat-square&logo=gmail&logoColor=D9FF00" alt="E-mail">
-  </a>
-  <a href="https://www.instagram.com/_ferd14_/">
-    <img src="https://img.shields.io/badge/instagram-0E0F0E?style=flat-square&logo=instagram&logoColor=D9FF00" alt="Instagram">
-  </a>
-</p>
+Estudo Engenharia Eletrônica e de Telecomunicações na UNESP. Antes disso cursei um ano de Engenharia de Controle e Automação no IFSP, onde peguei gosto por construir coisa que funciona de ponta a ponta: circuito, código e interface.
 
-## Sobre
+Front-end virou o meu foco. Trabalho com HTML, CSS e JavaScript puro, e a parte que mais me interessa é o movimento: como a página se comporta enquanto a pessoa rola, e quanto isso custa de performance.
 
-Sou o Fernando, moro em Rio Claro (SP) e curso Engenharia Eletrônica e de Telecomunicações na UNESP. Antes disso fiz um ano de Engenharia de Controle e Automação no IFSP.
+No meu portfólio não existe nenhuma biblioteca de animação. Está tudo escrito à mão, e a maior parte do esforço foi diminuir o trabalho que o navegador precisa fazer a cada quadro.
 
-Comecei a mexer com front-end em 2025 e acabei gostando mais da parte de animação. No meu portfólio não usei GSAP nem Framer Motion, fiz tudo no braço com IntersectionObserver, requestAnimationFrame e Canvas. As animações desligam sozinhas se a pessoa tiver reduced motion ligado no sistema.
+<details>
+<summary><b>as decisões técnicas por trás disso</b></summary>
 
-Como venho da engenharia, também me viro fora do navegador. Na smartband do IFSP eu desenhei a caixa no AutoCAD, montei o circuito com ESP32 e fiz a tela de monitoramento.
+<br>
+
+A primeira versão tinha nove listeners de scroll e doze de resize, cada módulo com o seu próprio `requestAnimationFrame`. O que mudou depois:
+
+**Uma agenda única.** Um listener de scroll e um de resize para o site inteiro, com duas filas por quadro: primeiro todos medem, depois todos escrevem. Leitura de layout que vem depois de uma escrita obriga o navegador a recalcular na hora. Separando as passadas, o cálculo acontece uma vez só por quadro. Eram 0,40 ms por quadro nisso, o que num celular vira 1,6 a 3,2 ms.
+
+**`window.scrollY` lido uma vez por quadro.** Ele não é uma variável, é uma consulta que força recálculo se o layout estiver sujo. A barra de progresso lia uma vez, o marquee lia duas, e as três leituras caíam na passada de desenho, depois de todo mundo já ter escrito.
+
+**Handle do rAF no lugar de um booleano.** Se o callback não chega a rodar, com a aba em segundo plano ou com o Safari suspendendo o rAF no meio de um gesto, o booleano fica travado e o scroll do site inteiro para. Chegou a acontecer: página carregada em aba de fundo deixava a seção de scroll horizontal com `height: 0`. Guardando o handle dá para cancelar e pedir de novo, e o `visibilitychange` descarta quadro pendurado.
+
+**Marquees sem JavaScript.** Viraram `animation` no CSS e rodam no compositor. O JavaScript que sobrou ali só calcula a duração, para a velocidade ficar igual em faixas de larguras diferentes.
+
+**Efeito de mouse só onde existe mouse.** Cursor, tilt e parallax verificam `(hover: hover) and (pointer: fine)` antes de ligar. Em tela de toque não fazem sentido e só gastam bateria.
+
+**`prefers-reduced-motion` como ponto único de verdade.** Quem tem "reduzir movimento" ativo no sistema recebe a versão estática de tudo.
+
+</details>
 
 ## Projetos
 
-### Portfólio pessoal
+**[fernandomcruz.com.br](https://fernandomcruz.com.br)** · [código](https://github.com/fernandomcruz/portfolionovo)
 
-`JavaScript` `HTML5` `CSS3` `Canvas` `Netlify`
+Meu portfólio, design e código meus. Cursor customizado, marquees, revelações no scroll e uma assinatura que se desenha em Canvas. É onde está tudo que descrevi acima.
 
-Meu site pessoal. Fiz o design e o código, do layout até as animações. São umas 4.400 linhas de JavaScript, onde ficam o cursor customizado, a assinatura que se desenha em Canvas e os marquees. Roda na Netlify com domínio próprio.
+**[L&D Engenharia](https://ldengenharia.netlify.app/)** · [código](https://github.com/fernandomcruz/L-D-Empresa-Junior)
 
-[Ver o site](https://fernandomcruz.com.br) &nbsp;·&nbsp; [Código](https://github.com/fernandomcruz/portfolionovo)
+Site institucional de uma empresa júnior de engenharia, com serviços, projetos, equipe e contato. Segui a identidade visual que eles já tinham. Aqui a prioridade era o oposto do portfólio: nada de efeito atrapalhando quem só quer achar o contato.
 
-### L&D Engenharia
+**[Smartband Acessível](https://sites.google.com/view/caosifsp/p%C3%A1gina-inicial)** · IFSP
 
-`HTML5` `CSS3` `JavaScript` `Netlify`
-
-Site institucional da empresa júnior L&D Engenharia, com serviços, projetos, equipe e contato. Segui a identidade da marca e deixei o layout funcionando bem no celular.
-
-[Ver o site](https://ldengenharia.netlify.app/) &nbsp;·&nbsp; [Código](https://github.com/fernandomcruz/L-D-Empresa-Junior)
-
-### Smartband Acessível
-
-`ESP32` `Python` `C#` `JavaScript` `AutoCAD`
-
-Projeto que fiz no IFSP. Uma pulseira que mede batimentos e temperatura e detecta quedas, pensada para a segurança de idosos. O hardware é um ESP32 com sensor MPU em protoboard, a caixa eu desenhei no AutoCAD, a lógica de controle ficou em Python e C#, e a tela de monitoramento em HTML, CSS e JavaScript. Manda alerta em tempo real para o aplicativo.
-
-[Ver o projeto](https://sites.google.com/view/caosifsp/p%C3%A1gina-inicial)
+Pulseira de monitoramento de saúde voltada à segurança de idosos, com medição de batimentos, temperatura e detecção de quedas. Hardware em ESP32 com sensor MPU montado em protoboard, caixa projetada por mim em AutoCAD, lógica de controle e processamento em Python e C#, e a interface de monitoramento em HTML, CSS e JavaScript. O sistema envia alerta em tempo real para o aplicativo.
 
 ## Stack
 
-- **Linguagens:** JavaScript, HTML5, CSS3, Python
-- **Front-end:** Bootstrap 4, Flexbox, design responsivo, Canvas, IntersectionObserver
-- **Ferramentas:** Git, GitHub, Netlify, VS Code, AutoCAD, Excel
-- **Idiomas:** português nativo, inglês intermediário
+<img src="stack.svg" width="100%" alt="HTML5, CSS3, JavaScript, Python, Bootstrap, Flexbox, Canvas, IntersectionObserver, Git, GitHub, Netlify, VS Code, AutoCAD">
+
+Português nativo, inglês intermediário.
 
 ## Formação
 
-| Período | Curso | Instituição |
-| :--- | :--- | :--- |
-| 2026 a 2029 | Engenharia Eletrônica e de Telecomunicações | UNESP |
-| 2025 a 2026 | Engenharia de Controle e Automação | IFSP |
+- **UNESP** · Engenharia Eletrônica e de Telecomunicações · 2026 a 2029, no segundo ano
+- **IFSP** · Engenharia de Controle e Automação · 2025 a 2026
 
 **Cursos**
 
-- Desenvolvimento Web Completo, na Udemy (cursando desde 2025)
-- Python, no Santander Open Academy (2025)
-- Inglês, no Influx (2015 a 2019)
+- **Desenvolvimento Web Completo** · Udemy, desde março de 2025, em andamento. HTML5, CSS3, design responsivo, Bootstrap 4, Flexbox e JavaScript, com um projeto ao final de cada módulo.
+- **Python** · Santander Open Academy, fevereiro de 2025. Estruturas de dados e de controle, tratamento de exceções e resiliência de código.
+- **Inglês** · Influx, 2015 a 2019, até o nível intermediário.
 
 ## Contato
 
 Procuro estágio ou vaga júnior em front-end.
 
-- Site: [fernandomcruz.com.br](https://fernandomcruz.com.br)
-- E-mail: [fernandomarquecruz@gmail.com](mailto:fernandomarquecruz@gmail.com)
-- LinkedIn: [Fernando Marques da Cruz](https://www.linkedin.com/in/fernando-marques-da-cruz-105029346/)
+[e-mail](mailto:fernandomarquecruz@gmail.com) · [linkedin](https://www.linkedin.com/in/fernando-marques-da-cruz-105029346/) · [instagram](https://www.instagram.com/_ferd14_/)
