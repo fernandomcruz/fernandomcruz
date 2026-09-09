@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="assets/banner.png" width="100%" alt="Fernando Marques da Cruz, front-end developer, Rio Claro, SP, fernandomcruz.com.br">
+  <img src="banner.png" width="100%" alt="Fernando Marques da Cruz, front-end developer, Rio Claro, SP, fernandomcruz.com.br">
 </div>
 
 <p align="center">
